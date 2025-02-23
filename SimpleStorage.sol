@@ -4,11 +4,15 @@ pragma solidity ^0.8.19;
 contract SimpleStorage {
     uint256 public storedNumber;
     address public owner;
-    mapping(address => uint256) public userNumber;
+    mapping(address => userData) public userNumber;
 
     event UserNumberStored(address indexed user, uint256 number);
     event OwnershipTransferred(address indexed oldOwner, address indexed newOwner);
     
+    struct userData {
+        address user;
+        uint256[] numbers;
+    }
 
     constructor () {
         owner = msg.sender;
@@ -20,13 +24,17 @@ contract SimpleStorage {
     }
 
     function storeNumber(uint256 _number) public  {
-        userNumber[msg.sender] = _number;
+       if (userNumber[msg.sender].user == address(0)) {
+        userNumber;
+    }
+        userNumber[msg.sender].numbers.push(_number);
+
 
         emit UserNumberStored(msg.sender, _number);
     }
 
-    function retrieveNumber() public view returns (uint256) {
-        return userNumber[msg.sender];
+    function retrieveNumber() public view returns (uint256[] memory) {
+        return userNumber[msg.sender].numbers;
     }
 
 
